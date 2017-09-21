@@ -19,12 +19,7 @@ def create_db_connection(db_file):
         
     return None
 
-#def close database connection
-def close_db_connection():
-    """Create a database connection to the DB file .db"""
 
-    conn.close()
-    print (" Close a connection to DB ")
     
 
 #Query DB Select Deveice detail by rfiduid
@@ -34,7 +29,7 @@ def select_DeviceDetails_by_rfiduid(conn, rfiduid1):
     param conn: the Connection object
     param rfiduid:
     """
-    print (" select_DeviceDetails_by_id")
+    print (" DB select_DeviceDetails_by_id")
     cur = conn.cursor()
     cur.execute("SELECT vehId, vehName, BUID, RFUID FROM DeviceDetails WHERE RFUID=?",(rfiduid1,))
  
@@ -42,7 +37,7 @@ def select_DeviceDetails_by_rfiduid(conn, rfiduid1):
     vehDetails = None;
     for row in rows:
         vehDetails = row
-        print vehDetails
+        #print vehDetails
           
     return vehDetails
 
@@ -53,7 +48,7 @@ def select_TyreDetails_by_VehId(conn, VehId1):
     param rfiduid:
     """
     TyreDetials = []
-    print (" select_TireDetails_by_VehId ")
+    print (" DB select_TireDetails_by_VehId ")
     cur = conn.cursor()
     cur.execute("SELECT sensorUID, tirePosition FROM TireDetails WHERE vehId=?",(VehId1,))
  
@@ -61,22 +56,25 @@ def select_TyreDetails_by_VehId(conn, VehId1):
     TyreDetails = None;
     for row in rows:
         TyreDetails = row
-        print TyreDetails
+        #print TyreDetails
         
-    return TyreDetials
+    #return TyreDetials
+    return rows
 
 
 def main():
     
     database = "/opt/Aquire/sqlite/Sample.db"
-    print (" Create a connection ")
+    print (" DB Create a connection ")
     
     #create a connection to database
-    conn = create_connection(database)
+    conn = create_db_connection(database)
 
+    tag = "RFUID 1"
+    vehID = 24
     with conn:
-        select_DeviceDetails_by_rfiduid(conn, "RFUID 1")
-        select_TyreDetails_by_VehId(conn, 24)
+        #select_DeviceDetails_by_rfiduid(conn, tag)
+        select_TyreDetails_by_VehId(conn, vehID)
 
 if __name__ == '__main__':
     main()
