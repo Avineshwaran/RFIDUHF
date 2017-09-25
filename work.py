@@ -16,6 +16,8 @@ from pip._vendor.pkg_resources import null_ns_handler
 
 import db
 import rfid
+import blecontroller
+from blecontroller import *
 
 #Variable Decleration
 s = 'hello'
@@ -33,6 +35,9 @@ database = "/opt/Aquire/sqlite/Sample.db"
 TID1 = "e2000016351702081640767f"
 tag_id = "RFUID 1"
 vehID = 24
+BUID = '00:13:EF:C0:02:1E'
+
+
 
 # Start Query the DB with RFID TID
 def db_DeviceDetails_by_rfiduid():
@@ -120,10 +125,15 @@ def db_DeviceDetails_by_vehID(vehID1):
 # Start Connecting the Socket by BUID
 def Connect_Socket_Bluetooth_by_BUID(BUID):
 
-    print("Create a database connection to the DB file .db")
-    conn = db.create_db_connection(database)
-    
-    #print tag_id
+    print("Create a Bluetooth connection")
+    data = blecontroller.connect_ble(BUID)
+    #blecontroller.init()
+
+    Tyre1No, Tyre1ID, Tyre1Presure, Tyre1Temp,Tyre2No, Tyre2ID, Tyre2Presure, Tyre2Temp,Tyre3No, Tyre3ID, Tyre3Presure, Tyre3Temp=blecontroller.ParseBluetoothTyre(data)
+
+    print Tyre1No, Tyre1ID, Tyre1Presure, Tyre1Temp,Tyre2No, Tyre2ID, Tyre2Presure, Tyre2Temp,Tyre3No, Tyre3ID, Tyre3Presure, Tyre3Temp
+    '''
+    #print BUID
     print("Query the database to read Vehicle Details by RFUID")
     #vehDetail = db.select_DeviceDetails_by_rfiduid(conn, "RFID 1")
 
@@ -139,7 +149,8 @@ def Connect_Socket_Bluetooth_by_BUID(BUID):
         #print vehID, vehName, BUID, RFUID
 
     return vehID, vehName, BUID, RFUID
-
+    '''
+    
 def fun():
     print("Main Function")
 
@@ -152,12 +163,15 @@ def fun():
     vehID=24
     if (vehID != None):
         print("Query the Database to read Tyre Details, Sensor ID, Position by vehID")
-        db_DeviceDetails_by_vehID(vehID)
+        #db_DeviceDetails_by_vehID(vehID)
 
     
     if (BUID != None):
-        print("Connect socket RFCOMM to Bluetooth Controller by vehID")
+        print("Connect socket RFCOMM to Bluetooth Controller by BUID")
         Connect_Socket_Bluetooth_by_BUID(BUID)    
+
+        
+    print("After While Loop Connect socket RFCOMM to Bluetooth Controller by BUID")
 
 if __name__ == "__main__":  
     
